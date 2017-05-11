@@ -1,0 +1,7 @@
+sudo: false
+cache: bundler
+language: ruby
+script:
+  - bundle exec rake
+rvm:
+  - 2.3.4
