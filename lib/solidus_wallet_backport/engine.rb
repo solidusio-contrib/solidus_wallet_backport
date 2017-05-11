@@ -9,6 +9,10 @@ module SolidusWalletBackport
       g.test_framework :rspec
     end
 
+    initializer "solidus_wallet_backport.permitted_attributes", before: :load_config_initializers do
+      Spree::PermittedAttributes.source_attributes << :wallet_payment_source_id
+    end
+
     def self.activate
       Dir.glob(File.join(File.dirname(__FILE__), '../../app/**/*_decorator*.rb')) do |c|
         Rails.configuration.cache_classes ? require(c) : load(c)
