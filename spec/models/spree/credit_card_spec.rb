@@ -39,7 +39,7 @@ describe Spree::CreditCard, type: :model do
   # TODO: Remove these specs once default is removed
   describe 'default' do
     def default_with_silence(card)
-      Spree::Deprecation.silence { card.default }
+      card.default
     end
 
     context 'with a user' do
@@ -66,7 +66,7 @@ describe Spree::CreditCard, type: :model do
   # TODO: Remove these specs once default= is removed
   describe 'default=' do
     def default_with_silence(card)
-      Spree::Deprecation.silence { card.default }
+      card.default
     end
 
     context 'with a user' do
@@ -74,9 +74,7 @@ describe Spree::CreditCard, type: :model do
       let(:credit_card) { create(:credit_card, user: user) }
 
       it 'updates the wallet information' do
-        Spree::Deprecation.silence do
-          credit_card.default = true
-        end
+        credit_card.default = true
         expect(user.wallet.default_wallet_payment_source.payment_source).to eq(credit_card)
       end
     end
@@ -87,17 +85,13 @@ describe Spree::CreditCard, type: :model do
       let(:second_card) { create(:credit_card, user: user) }
 
       it 'ensures only one default' do
-        Spree::Deprecation.silence do
-          first_card.default = true
-          second_card.default = true
-        end
+        first_card.default = true
+        second_card.default = true
 
         expect(default_with_silence(first_card)).to be_falsey
         expect(default_with_silence(second_card)).to be_truthy
 
-        Spree::Deprecation.silence do
-          first_card.default = true
-        end
+        first_card.default = true
 
         expect(default_with_silence(first_card)).to be_truthy
         expect(default_with_silence(second_card)).to be_falsey
@@ -109,10 +103,8 @@ describe Spree::CreditCard, type: :model do
       let(:second_card) { create(:credit_card, user: create(:user)) }
 
       it 'allows multiple defaults' do
-        Spree::Deprecation.silence do
-          first_card.default = true
-          second_card.default = true
-        end
+        first_card.default = true
+        second_card.default = true
 
         expect(default_with_silence(first_card)).to be_truthy
         expect(default_with_silence(second_card)).to be_truthy
@@ -124,9 +116,7 @@ describe Spree::CreditCard, type: :model do
 
       it 'raises' do
         expect {
-          Spree::Deprecation.silence do
-            credit_card.default = true
-          end
+          credit_card.default = true
         }.to raise_error("Cannot set 'default' on a credit card without a user")
       end
     end

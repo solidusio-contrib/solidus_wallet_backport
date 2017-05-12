@@ -1,5 +1,25 @@
-module SolidusWalletBackport
-  module PaymentCreateDecorator
+module Spree
+  # Service object for creating new payments on an Order
+  class PaymentCreate
+    # @param order [Order] The order for the new payment
+    # @param attributes [Hash,ActionController::Parameters] attributes which are assigned to the new payment
+    #   * :payment_method_id Id of payment method used for this payment
+    #   * :source_attributes Attributes used to build the source of this payment. Usually a {CreditCard}
+    #     * :existing_card_id (Integer) Deprecated: The id of an existing {CreditCard} object to use
+    #     * :wallet_payment_source_id (Integer): The id of a {WalletPaymentSource} to use
+    # @param request_env [Hash] rack env of user creating the payment
+    # @param payment [Payment] Internal use only. Instead of making a new payment, change the attributes for an existing one.
+    def initialize(order, attributes, payment: nil, request_env: {})
+      @order = order
+      @payment = payment
+
+      # If AC::Params are passed in, attributes.to_h gives us a hash of only
+      # the permitted attributes.
+      @attributes = attributes.to_h.with_indifferent_access
+      @source_attributes = @attributes.delete(:source_attributes) || {}
+      @request_env = request_env
+    end
+
     # Build the new Payment
     # @return [Payment] a new (unpersisted) Payment
     def build
@@ -19,6 +39,8 @@ module SolidusWalletBackport
     end
 
     private
+
+    attr_reader :order, :payment, :attributes, :source_attributes
 
     def build_source
       payment_method = payment.payment_method
@@ -53,7 +75,13 @@ module SolidusWalletBackport
       payment.source = payment_source
       payment.payment_method_id = payment_source.payment_method_id
     end
+
+    def available_cards
+      if user_id = order.user_id
+        Spree::CreditCard.where(user_id: user_id)
+      else
+        Spree::CreditCard.none
+      end
+    end
   end
 end
-
-Spree::PaymentCreate.prepend SolidusWalletBackport::PaymentCreateDecorator
