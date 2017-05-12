@@ -58,25 +58,25 @@ describe Spree::Payment, type: :model do
 
       describe "building a payment" do
         subject do
-          Spree::PaymentCreate.new(order, params).build.save!
+          Spree::PaymentCreate.new(order, params).build
         end
 
         it 'sets the existing card as the source for the new payment' do
           expect {
-            subject
+            subject.save!
           }.to change { Spree::Payment.count }.by(1)
 
           expect(order.payments.last.source).to eq(credit_card)
         end
 
         it 'sets the payment payment_method to that of the credit card' do
-          subject
+          subject.save!
           expect(order.payments.last.payment_method_id).to eq(credit_card.payment_method_id)
         end
 
         it 'sets the verification_value on the credit card' do
-          subject
-          expect(order.payments.last.source.verification_value).to eq('321')
+          subject.save!
+          expect(subject.source.verification_value).to eq('321')
         end
 
         it 'sets the request_env on the payment' do
@@ -93,7 +93,7 @@ describe Spree::Payment, type: :model do
             other_user.wallet.add(credit_card)
           end
           it 'errors' do
-            expect { subject }.to raise_error(ActiveRecord::RecordNotFound)
+            expect { subject.save! }.to raise_error(ActiveRecord::RecordNotFound)
           end
         end
 
@@ -103,7 +103,7 @@ describe Spree::Payment, type: :model do
             user.wallet.remove(credit_card)
           end
           it 'errors' do
-            expect { subject }.to raise_error(ActiveRecord::RecordNotFound)
+            expect { subject.save! }.to raise_error(ActiveRecord::RecordNotFound)
           end
         end
       end
