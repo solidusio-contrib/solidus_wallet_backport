@@ -1,4 +1,4 @@
-class MigrateCreditCardsToWalletPaymentSources < ActiveRecord::Migration[4.2]
+class MigrateCreditCardsToWalletPaymentSources < SolidusSupport::Migration[4.2]
   class CreditCard < ActiveRecord::Base
     self.table_name = 'spree_credit_cards'
   end

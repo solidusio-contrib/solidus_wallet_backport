@@ -1,4 +1,4 @@
-class CreateSpreeWalletPaymentSources < ActiveRecord::Migration[4.2]
+class CreateSpreeWalletPaymentSources < SolidusSupport::Migration[4.2]
   def change
     create_table :spree_wallet_payment_sources do |t|
       t.references(
