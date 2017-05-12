@@ -9,12 +9,8 @@ class Spree::WalletPaymentSource < ActiveRecord::Base
 
   private
 
-  # Unlike Solidus 2.2, we directly allow CreditCard and StoreCredit here
   def check_for_payment_source_class
-    if !payment_source.is_a?(Spree::PaymentSource) &&
-       !payment_source.is_a?(Spree::CreditCard) &&
-       !payment_source.is_a?(Spree::StoreCredit)
-
+    if !payment_source.is_a?(Spree::PaymentSource)
       errors.add(:payment_source, :has_to_be_payment_source_class)
     end
   end
