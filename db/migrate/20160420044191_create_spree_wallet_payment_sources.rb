@@ -3,7 +3,6 @@ class CreateSpreeWalletPaymentSources < SolidusSupport::Migration[4.2]
     create_table :spree_wallet_payment_sources do |t|
       t.references(
         :user,
-        foreign_key: { to_table: Spree.user_class.table_name },
         index: true,
         null: false
       )

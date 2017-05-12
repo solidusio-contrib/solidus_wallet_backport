@@ -33,4 +33,6 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'sqlite3'
   s.add_development_dependency 'with_model'
   s.add_development_dependency 'rspec-activemodel-mocks', '~> 1.0.2'
+  s.add_development_dependency 'mysql2'
+  s.add_development_dependency 'pg'
 end

@@ -1,6 +1,8 @@
 Solidus Wallet Backport
 =====================
 
+[![Build Status](https://travis-ci.org/solidusio-contrib/solidus_wallet_backport.svg?branch=master)](https://travis-ci.org/solidusio-contrib/solidus_wallet_backport)
+
 This is an extraction of the Spree::Wallet and "Non credit card payment sources"
 features from Solidus 2.2, to be used on previous Solidus versions.
 
