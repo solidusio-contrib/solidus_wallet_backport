@@ -31,13 +31,18 @@ require 'spree/testing_support/capybara_ext'
 require 'spree/testing_support/controller_requests'
 require 'spree/testing_support/factories'
 require 'spree/testing_support/url_helpers'
+require 'spree/testing_support/order_walkthrough'
 
 # Requires factories defined in lib/solidus_wallet_backport/factories.rb
 require 'solidus_wallet_backport/factories'
 
+require 'capybara/poltergeist'
+Capybara.javascript_driver = :poltergeist
+
 RSpec.configure do |config|
   config.include FactoryGirl::Syntax::Methods
   config.extend WithModel
+  config.include Warden::Test::Helpers
 
   # Infer an example group's spec type from the file location.
   config.infer_spec_type_from_file_location!
