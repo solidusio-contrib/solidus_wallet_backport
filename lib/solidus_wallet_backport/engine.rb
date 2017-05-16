@@ -11,6 +11,7 @@ module SolidusWalletBackport
 
     initializer "solidus_wallet_backport.permitted_attributes", before: :load_config_initializers do
       Spree::PermittedAttributes.source_attributes << :wallet_payment_source_id
+      Spree::PermittedAttributes.source_attributes << :existing_card_id
     end
 
     def self.activate

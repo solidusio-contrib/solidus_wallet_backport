@@ -32,6 +32,7 @@ require 'spree/testing_support/controller_requests'
 require 'spree/testing_support/factories'
 require 'spree/testing_support/url_helpers'
 require 'spree/testing_support/order_walkthrough'
+require 'spree/api/testing_support/helpers'
 
 # Requires factories defined in lib/solidus_wallet_backport/factories.rb
 require 'solidus_wallet_backport/factories'
@@ -54,6 +55,7 @@ RSpec.configure do |config|
   # visit spree.admin_path
   # current_path.should eql(spree.products_path)
   config.include Spree::TestingSupport::UrlHelpers
+  config.include Spree::Api::TestingSupport::Helpers, type: :controller
 
   # == Mock Framework
   #
@@ -83,6 +85,14 @@ RSpec.configure do |config|
   config.before :each do
     DatabaseCleaner.strategy = RSpec.current_example.metadata[:js] ? :truncation : :transaction
     DatabaseCleaner.start
+    Spree::Api::Config[:requires_authentication] = true
+  end
+
+  if defined?(VersionCake::TestHelpers)
+    config.include VersionCake::TestHelpers, type: :controller
+    config.before(:each, type: :controller) do
+      set_request_version('', 1)
+    end
   end
 
   # After each spec clean the database.
