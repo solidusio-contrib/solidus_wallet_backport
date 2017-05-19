@@ -32,6 +32,6 @@ end
 
 desc 'Adds a custom payment method to the test app'
 task :dummy_payment_method do
-  require_relative 'lib/generators/solidus_wallet_backport/dummy_payment_method/dummy_payment_method_generator'
+  require_relative 'lib/_generators/solidus_wallet_backport/dummy_payment_method/dummy_payment_method_generator'
   SolidusWalletBackport::Generators::DummyPaymentMethodGenerator.start
 end
