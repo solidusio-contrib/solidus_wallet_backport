@@ -1,0 +1,6 @@
+<%% param_prefix = "payment_source[#{payment_method.id}]" %>
+
+<p class="field">
+  <%%= label_tag "name_#{payment_method.id}", "Roman name" %><span class="required">*</span><br />
+  <%%= text_field_tag "#{param_prefix}[name]", nil, { id: "name_#{payment_method.id}" } %>
+</p>

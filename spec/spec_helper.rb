@@ -38,7 +38,17 @@ require 'spree/api/testing_support/helpers'
 require 'solidus_wallet_backport/factories'
 
 require 'capybara/poltergeist'
+Capybara.register_driver :poltergeist do |app|
+  Capybara::Poltergeist::Driver.new(
+    app,
+    timeout: 1.minute,
+    phantomjs_options: ['--load-images=no']
+  )
+end
 Capybara.javascript_driver = :poltergeist
+
+require 'factory_girl'
+FactoryGirl.find_definitions
 
 RSpec.configure do |config|
   config.include FactoryGirl::Syntax::Methods
@@ -77,13 +87,17 @@ RSpec.configure do |config|
 
   # Ensure Suite is set to use transactions for speed.
   config.before :suite do
-    DatabaseCleaner.strategy = :transaction
     DatabaseCleaner.clean_with :truncation
   end
 
   # Before each spec check if it is a Javascript test and switch between using database transactions or not where necessary.
   config.before :each do
-    DatabaseCleaner.strategy = RSpec.current_example.metadata[:js] ? :truncation : :transaction
+    if RSpec.current_example.metadata[:js]
+      page.driver.browser.url_blacklist = ['http://fonts.googleapis.com']
+      DatabaseCleaner.strategy = :truncation
+    else
+      DatabaseCleaner.strategy = :transaction
+    end
     DatabaseCleaner.start
     Spree::Api::Config[:requires_authentication] = true
   end

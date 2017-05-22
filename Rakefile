@@ -27,4 +27,11 @@ desc 'Generates a dummy app for testing'
 task :test_app do
   ENV['LIB_NAME'] = 'solidus_wallet_backport'
   Rake::Task['extension:test_app'].invoke
+  Rake::Task[:dummy_payment_method].invoke
+end
+
+desc 'Adds a custom payment method to the test app'
+task :dummy_payment_method do
+  require_relative 'lib/_generators/solidus_wallet_backport/dummy_payment_method/dummy_payment_method_generator'
+  SolidusWalletBackport::Generators::DummyPaymentMethodGenerator.start
 end
