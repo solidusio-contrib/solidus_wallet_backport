@@ -1,13 +1,15 @@
-module Spree
-  class PaymentSource < Spree::Base
-    self.abstract_class = true
+module SolidusWalletBackport
+  module PaymentSource
+    extend ActiveSupport::Concern
 
-    belongs_to :payment_method
+    included do
+      belongs_to :payment_method
 
-    has_many :payments, as: :source
-    has_many :wallet_payment_sources, class_name: 'Spree::WalletPaymentSource', as: :payment_source, inverse_of: :payment_source
+      has_many :payments, as: :source
+      has_many :wallet_payment_sources, class_name: 'Spree::WalletPaymentSource', as: :payment_source, inverse_of: :payment_source
 
-    attr_accessor :imported
+      attr_accessor :imported
+    end
 
     # @return [Array<String>] the actions available on this payment source
     def actions
