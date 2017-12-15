@@ -14,6 +14,12 @@ module Spree
     # Assign the attributes to the order and save the order
     # @return true if saved, otherwise false and errors will be set on the order
     def apply
+      if @order.respond_to? :validate_payments_attributes
+        @order.validate_payments_attributes(@payments_attributes)
+      else
+        Rails.logger.warn "WARNING: This Solidus version contains a security vulnerability. Please upgrade to at least 2.1.1, 2.0.3, 1.4.2, 1.3.2, 1.2.3, 1.1.4 or 1.0.7"
+      end
+
       assign_order_attributes
       assign_payments_attributes
 
